@@ -18,6 +18,15 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware(['auth', 'verified'])->get('/admin', function () {
+    if (!auth()->user()->is_admin) {
+        abort(403);
+    }
+
+    return Inertia::render('AdminDashboard');
+})->name('admin.dashboard');
+
+
 Route::middleware(['auth', 'verified'])->get('/tasks', function () {
     return Inertia::render('TasksView');
 })->name('tasks');
@@ -31,5 +40,5 @@ Route::middleware('auth')->group(function () {
 Route::middleware('api')
     ->prefix('api')
     ->group(base_path('routes/api.php'));
-
+    
 require __DIR__.'/auth.php';

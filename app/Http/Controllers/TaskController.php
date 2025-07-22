@@ -21,26 +21,19 @@ class TaskController extends Controller
      */
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'title' => 'required|string|max:255',
             'description' => 'nullable|string',
-            'due_date' => 'nullable|date|after_or_equal:today',
+            'due_date' => 'required|date',
+            'user_id' => 'required|exists:users,id'
         ]);
 
-        if (!Auth::user()->is_admin) {
-            return response()->json(['message' => 'Apenas administradores podem criar tarefas.'], 403);
-        }
-
-        $task = Task::create([
-            'user_id' => Auth::id(),
-            'title' => $request->title,
-            'description' => $request->description,
-            'due_date' => $request->due_date,
-            'is_completed' => false,
-        ]);
+        $task = Task::create($validated);
 
         return response()->json($task, 201);
     }
+
+
 
     /**
      * Atualizar tarefa existente (somente se for do usuário)
