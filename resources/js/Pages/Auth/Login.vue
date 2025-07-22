@@ -30,7 +30,7 @@ const submit = () => {
             if (user?.is_admin) {
                 router.visit('/admin');
             } else {
-                router.visit('/dashboard');
+                router.visit('/tasks');
             }
         },
         onFinish: () => form.reset('password'),

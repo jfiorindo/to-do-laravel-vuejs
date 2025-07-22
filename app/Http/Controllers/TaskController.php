@@ -40,18 +40,12 @@ class TaskController extends Controller
      */
     public function update(Request $request, Task $task)
     {
-        if ($task->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Você não tem permissão para editar esta tarefa.'], 403);
+        // Libera admins para editar qualquer tarefa
+        if (Auth::user()->is_admin !== true && $task->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
-        $request->validate([
-            'title' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'due_date' => 'nullable|date|after_or_equal:today',
-            'is_completed' => 'boolean',
-        ]);
-
-        $task->update($request->only(['title', 'description', 'due_date', 'is_completed']));
+        $task->update($request->all());
 
         return response()->json($task);
     }
@@ -61,12 +55,14 @@ class TaskController extends Controller
      */
     public function destroy(Task $task)
     {
-        if ($task->user_id !== Auth::id()) {
-            return response()->json(['message' => 'Você não tem permissão para deletar esta tarefa.'], 403);
+        // Libera admins para excluir qualquer tarefa
+        if (Auth::user()->is_admin !== true && $task->user_id !== Auth::id()) {
+            return response()->json(['error' => 'Unauthorized'], 403);
         }
 
         $task->delete();
 
-        return response()->json(['message' => 'Tarefa deletada com sucesso.'], 204);
+        return response()->json(['message' => 'Task deleted']);
     }
+
 }
