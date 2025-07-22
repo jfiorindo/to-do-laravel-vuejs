@@ -5,7 +5,7 @@ import InputError from '@/Components/InputError.vue';
 import InputLabel from '@/Components/InputLabel.vue';
 import PrimaryButton from '@/Components/PrimaryButton.vue';
 import TextInput from '@/Components/TextInput.vue';
-import { Head, Link, useForm } from '@inertiajs/vue3';
+import { Head, Link, useForm, usePage, router } from '@inertiajs/vue3';
 
 defineProps({
     canResetPassword: {
@@ -24,12 +24,27 @@ const form = useForm({
 
 const submit = () => {
     form.post(route('login'), {
+        onSuccess: () => {
+            const user = usePage().props.auth.user;
+
+            if (user?.is_admin) {
+                router.visit('/admin');
+            } else {
+                router.visit('/dashboard');
+            }
+        },
         onFinish: () => form.reset('password'),
     });
 };
+
 </script>
 
 <template>
+    <p v-if="$page.props.auth.user">
+        Logado como: {{ $page.props.auth.user.email }} |
+        Admin: {{ $page.props.auth.user.is_admin }}
+    </p>
+
     <GuestLayout>
         <Head title="Log in" />
 
