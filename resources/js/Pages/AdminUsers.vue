@@ -217,9 +217,15 @@ export default {
       this.detalhes = null
     },
     formatarData(dataStr) {
-      const [ano, mes, dia] = dataStr.split('-')
-      return `${dia}/${mes}/${ano}`
+      const data = new Date(dataStr)
+      const dia = String(data.getDate()).padStart(2, '0')
+      const mes = String(data.getMonth() + 1).padStart(2, '0') // meses começam do 0
+      const ano = data.getFullYear()
+      const horas = String(data.getHours()).padStart(2, '0')
+      const minutos = String(data.getMinutes()).padStart(2, '0')
+      return `${dia}/${mes}/${ano} ${horas}:${minutos}`
     }
+
   },
   mounted() {
     this.carregarUsuarios()
