@@ -130,6 +130,14 @@ import axios from '@/axios'
       </div>
     </div>
   </div>
+  <div class="mb-6 text-center">
+  <a
+    href="/api/admin/export-tasks"
+    class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition"
+  >
+    Exportar Tarefas (CSV)
+  </a>
+</div>
 </template>
 
 <script>
@@ -187,6 +195,21 @@ export default {
     },
     async criarTarefa() {
       try {
+        const hoje = new Date();
+        const maxDate = new Date();
+        maxDate.setFullYear(maxDate.getFullYear() + 30);
+        const dataInformada = new Date(this.novaTarefa.due_date);
+
+        if (dataInformada < hoje) {
+          alert('A data de vencimento não pode ser no passado.');
+          return;
+        }
+
+        if (dataInformada > maxDate) {
+          alert('A data de vencimento não pode ser mais de 30 anos no futuro.');
+          return;
+        }
+
         const duplicada = this.tarefas.find(tarefa =>
           tarefa.title.trim().toLowerCase() === this.novaTarefa.title.trim().toLowerCase() &&
           tarefa.user_id === this.novaTarefa.user_id
@@ -195,6 +218,7 @@ export default {
           alert('Já existe uma tarefa com esse título para este usuário.');
           return;
         }
+
         await axios.post('/api/tasks', this.novaTarefa);
         this.novaTarefa = { title: '', description: '', due_date: '', user_id: '' };
         await this.carregarTarefas();
@@ -234,6 +258,7 @@ export default {
     this.carregarUsuarios()
   }
 }
+
 </script>
 
 <style scoped>

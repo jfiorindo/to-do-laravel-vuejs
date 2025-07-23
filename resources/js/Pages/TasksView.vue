@@ -87,6 +87,25 @@ const chartOptions = {
 onMounted(() => {
   buscarTarefas()
 })
+
+const exportarCSV = async () => {
+  try {
+    const response = await axios.get('/api/export-tasks', {
+      responseType: 'blob',
+    })
+
+    const blob = new Blob([response.data], { type: 'text/csv;charset=utf-8;' })
+    const link = document.createElement('a')
+    link.href = window.URL.createObjectURL(blob)
+    link.setAttribute('download', 'tarefas.csv')
+    document.body.appendChild(link)
+    link.click()
+    document.body.removeChild(link)
+  } catch (error) {
+    console.error('Erro ao exportar tarefas:', error)
+  }
+}
+
 </script>
 
 <template>
@@ -172,6 +191,13 @@ onMounted(() => {
               </tbody>
             </table>
           </div>
+          <div class="flex justify-center my-6">
+          <button
+            @click="exportarCSV"
+            class="bg-gray-500 hover:bg-gray-600 text-white font-medium py-2 px-6 rounded shadow transition">
+            Exportar Tarefas (.CSV)
+          </button>
+        </div>
         </div>
       </div>
     </div>

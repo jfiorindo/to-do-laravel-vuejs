@@ -11,9 +11,23 @@ class TaskController extends Controller
     /**
      * Listar todas as tarefas do usuário autenticado
      */
-    public function index()
+    public function index(Request $request)
     {
-        return Task::where('user_id', Auth::id())->get();
+        $query = Task::where('user_id', Auth::id());
+
+        if ($request->filled('title')) {
+            $query->where('title', 'like', '%' . $request->title . '%');
+        }
+
+        if ($request->filled('description')) {
+            $query->where('description', 'like', '%' . $request->description . '%');
+        }
+
+        if ($request->filled('due_date')) {
+            $query->whereDate('due_date', $request->due_date);
+        }
+
+        return $query->orderBy('due_date')->get();
     }
 
     /**

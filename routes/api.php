@@ -11,6 +11,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/tasks/{task}', [TaskController::class, 'destroy']);
     Route::get('/admin/users', [AdminController::class, 'users']);
     Route::get('/admin/tasks', [AdminController::class, 'tasks']);
+    Route::get('/export-tasks', [\App\Http\Controllers\ExportController::class, 'export']);
+    Route::get('/admin/export-tasks', [AdminController::class, 'exportTasks']);
+
 });
 
 
