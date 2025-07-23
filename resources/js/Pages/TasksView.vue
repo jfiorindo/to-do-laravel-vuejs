@@ -18,6 +18,13 @@ const tarefas = ref([])
 const carregando = ref(true)
 const erro = ref(null)
 const user = usePage().props.auth.user
+const novaSenha = ref('')
+const showModal = ref(false)
+const senhaAtual = ref('')
+const confirmacaoSenha = ref('')
+const erroSenha = ref('')
+const sucessoSenha = ref('')
+
 
 const buscarTarefas = async () => {
   try {
@@ -106,6 +113,26 @@ const exportarCSV = async () => {
   }
 }
 
+const alterarSenha = async () => {
+  try {
+    await axios.post('/api/user/password', {
+      senhaAtual: senhaAtual.value,
+      novaSenha: novaSenha.value,
+    })
+    alert('Senha alterada com sucesso!')
+    showModal.value = false
+    senhaAtual.value = ''
+    novaSenha.value = ''
+  } catch (error) {
+    console.error(error.response?.data || error)
+    alert('Erro ao alterar senha. Verifique os dados informados.')
+  }
+}
+
+
+
+
+
 </script>
 
 <template>
@@ -113,12 +140,36 @@ const exportarCSV = async () => {
     <template #header>
       <div class="flex justify-between items-center">
         <div class="text-gray-700 font-semibold">Bem-vindo, {{ user.name }}</div>
-        <button @click="logout" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
-          Logout
-        </button>
+        <div class="space-x-2">
+          <button @click="showModal = true" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition">
+            Meu Perfil
+          </button>
+          <button @click="logout" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition">
+            Logout
+          </button>
+        </div>
       </div>
     </template>
+    <!-- Modal de alteração de senha -->
+    <div v-if="showModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+        <h2 class="text-lg font-bold mb-4">Alterar Senha</h2>
 
+        <p class="text-sm text-gray-700 mb-2"><strong>Nome:</strong> {{ user.name }}</p>
+        <p class="text-sm text-gray-700 mb-4"><strong>Email:</strong> {{ user.email }}</p>
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">Senha Atual</label>
+        <input type="password" v-model="senhaAtual" class="w-full p-2 border rounded mb-4" placeholder="Digite sua senha atual">
+
+        <label class="block mb-2 text-sm font-medium text-gray-700">Nova Senha</label>
+        <input type="password" v-model="novaSenha" class="w-full p-2 border rounded mb-4" placeholder="Digite a nova senha">
+
+        <div class="flex justify-end space-x-2">
+          <button @click="showModal = true" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
+          <button @click="alterarSenha" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Salvar</button>
+        </div>
+      </div>
+    </div>
     <div class="py-6">
       <div class="mx-auto max-w-7xl sm:px-6 lg:px-8 space-y-12">
         <div v-if="carregando" class="text-gray-600">Carregando tarefas...</div>

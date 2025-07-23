@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TaskController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\UserController;
+
 
 Route::middleware('auth:sanctum')->group(function () {
     Route::get('/tasks', [TaskController::class, 'index']);
@@ -23,6 +25,8 @@ Route::middleware(['auth:sanctum'])->prefix('admin')->group(function () {
     Route::put('/users/{id}', [AdminController::class, 'updateUser']);
     Route::delete('/users/{id}', [AdminController::class, 'deleteUser']);
 });
+
+Route::middleware('auth:sanctum')->post('/user/password', [UserController::class, 'alterarSenha']);
 
 
 
