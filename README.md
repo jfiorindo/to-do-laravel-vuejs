@@ -1,61 +1,136 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# To-Do List - Laravel + Vue.js
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Este é um sistema completo de gerenciamento de tarefas com autenticação, painel administrativo e interface moderna usando Vue.js + Inertia.js. Ideal para testes, entrevistas ou como projeto base para sistemas maiores.
 
-## About Laravel
+---
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## ✅ Funcionalidades
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Usuário comum:
+- Visualiza suas tarefas
+- Marca tarefas como concluídas/não concluídas
+- Exporta suas tarefas para CSV
+- Altera sua própria senha
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+### Administrador:
+- Acessa o painel `/admin`
+- Visualiza tarefas de todos os usuários
+- Exporta todas as tarefas
+- Gerencia usuários (criar, editar, excluir)
+- Visualiza estatísticas de tarefas por usuário
 
-## Learning Laravel
+---
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+## 🧰 Pré-requisitos
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- XAMPP (Apache + PHP 8+): https://www.apachefriends.org/pt_br/index.html
+- Composer (gerenciador de pacotes PHP): https://getcomposer.org/
+- Node.js + NPM (para build do front-end): https://nodejs.org/
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+---
 
-## Laravel Sponsors
+## 🚀 Instalação do Projeto
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+### 1. Clone o projeto
 
-### Premium Partners
+```
+git clone https://github.com/jfiorindo/to-do-laravel-vuejs
+cd seu-repositorio
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+### 2. Instale as dependências PHP
 
-## Contributing
+```
+composer install
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### 3. Instale as dependências front-end
 
-## Code of Conduct
+```
+npm install
+```
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### 4. Configure o `.env`
 
-## Security Vulnerabilities
+Copie o arquivo de exemplo e gere a chave da aplicação:
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+```
+cp .env.example .env
+php artisan key:generate
+```
 
-## License
+---
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## 🗄️ Banco de Dados (SQLite)
+
+Este projeto já acompanha o arquivo `database/database.sqlite` **com os usuários de teste criados**. Você **não precisa criar manualmente o banco**.
+
+**Importante:** certifique-se de que o caminho do banco esteja corretamente configurado no arquivo `.env`:
+
+```
+DB_CONNECTION=sqlite
+```
+
+Não é necessário configurar `DB_HOST`, `DB_USERNAME` nem `DB_PASSWORD`.
+
+---
+
+## 🏗️ Rodando a aplicação
+
+### 1. Inicie o servidor Laravel
+
+```
+php artisan serve
+```
+
+Acesse: http://127.0.0.1:8000
+
+### 2. Inicie o front-end (em outro terminal)
+
+```
+npm run dev
+```
+
+---
+
+## 👥 Usuários para Teste
+
+### Administrador
+- Email: admin@teste.com
+- Senha: admin123
+
+### Usuário Comum
+- Email: usuario@teste.com
+- Senha: usuario123
+
+---
+
+## 🧪 Testando o Sistema
+
+1. Acesse: http://127.0.0.1:8000/login
+2. Faça login com um dos usuários de teste.
+3. Navegue pelo sistema:
+   - Usuário comum verá apenas suas tarefas e poderá marcá-las como feitas/não feitas.
+   - Admin verá o painel de controle e poderá gerenciar usuários e tarefas.
+
+---
+
+## 📝 Observações
+
+- Usuários comuns **não podem editar ou excluir tarefas**, apenas visualizar e marcar como feitas.
+- O campo de senha **só é obrigatório ao criar um novo usuário** no painel do admin.
+- As tarefas têm filtros automáticos por vencimento e conclusão.
+
+---
+
+## 📂 Estrutura do Projeto
+
+- Laravel Breeze com Vue.js + Inertia.js
+- Banco SQLite incluso no repositório (`database/database.sqlite`)
+- Painel Admin acessível em `/admin` para usuários com `is_admin = true`
+
+---
+
+## ✅ Pronto!
+
+Se tudo estiver correto, o sistema estará funcionando com dois usuários de teste e todos os recursos disponíveis.
