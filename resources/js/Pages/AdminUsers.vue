@@ -1,4 +1,5 @@
 <template>
+  <Head title="Gerenciar Usuários" />
   <div class="max-w-6xl mx-auto px-4 py-8">
     <h1 class="text-3xl font-bold mb-6">👥 Gerenciar Usuários</h1>
     <div class="mb-4 flex justify-between items-center">
@@ -75,7 +76,21 @@
         <form @submit.prevent="salvarUsuario">
           <input v-model="form.name" placeholder="Nome" class="w-full border rounded p-2 mb-3" required />
           <input v-model="form.email" placeholder="Email" class="w-full border rounded p-2 mb-3" required />
-          <input v-if="!editando" v-model="form.password" type="password" placeholder="Senha" class="w-full border rounded p-2 mb-3" required />
+          <div v-if="!editando" class="relative mb-3">
+            <input
+              :type="mostrarSenha ? 'text' : 'password'"
+              v-model="form.password"
+              placeholder="Senha"
+              class="w-full border rounded p-2 pr-10"
+              required />
+            <button
+              type="button"
+              @click="mostrarSenha = !mostrarSenha"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+              tabindex="-1" >
+              {{ mostrarSenha ? '🔐' : '🔓' }}
+            </button>
+          </div>
           <label class="flex items-center space-x-2 mb-4">
             <input type="checkbox" v-model="form.is_admin" />
             <span>É administrador?</span>
@@ -111,9 +126,17 @@
   </div>
 </template>
 
+<script setup>
+  import { Head } from '@inertiajs/vue3'
+  import { ref } from 'vue'
+
+const mostrarSenha = ref(false)
+</script>
+
 <script>
 import axios from 'axios'
 import Chart from 'chart.js/auto'
+
 
 export default {
   name: 'AdminUsers',
@@ -132,9 +155,11 @@ export default {
   },
   computed: {
     usuariosFiltrados() {
-      return this.usuarios.filter(user =>
-        user.name.toLowerCase().includes(this.filtroNome.toLowerCase())
-      )
+      return this.usuarios
+        .filter(user =>
+          user.name.toLowerCase().includes(this.filtroNome.toLowerCase())
+        )
+        .sort((a, b) => new Date(b.created_at) - new Date(a.created_at))
     },
     usuariosPaginados() {
       const inicio = (this.paginaAtual - 1) * this.porPagina

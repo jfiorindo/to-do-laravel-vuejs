@@ -1,4 +1,5 @@
 <script setup>
+import { Head } from '@inertiajs/vue3'
 import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import AppLayout from '@/Layouts/AppLayout.vue'
@@ -24,6 +25,8 @@ const senhaAtual = ref('')
 const confirmacaoSenha = ref('')
 const erroSenha = ref('')
 const sucessoSenha = ref('')
+const mostrarSenhaAtual = ref(false)
+const mostrarNovaSenha = ref(false)
 
 
 const buscarTarefas = async () => {
@@ -136,6 +139,7 @@ const alterarSenha = async () => {
 </script>
 
 <template>
+  <Head title="Dashboard" />
   <AppLayout title="Minhas Tarefas">
     <template #header>
       <div class="flex justify-between items-center">
@@ -159,13 +163,43 @@ const alterarSenha = async () => {
         <p class="text-sm text-gray-700 mb-4"><strong>Email:</strong> {{ user.email }}</p>
 
         <label class="block mb-2 text-sm font-medium text-gray-700">Senha Atual</label>
-        <input type="password" v-model="senhaAtual" class="w-full p-2 border rounded mb-4" placeholder="Digite sua senha atual">
+          <div class="relative mb-4">
+            <input
+              :type="mostrarSenhaAtual ? 'text' : 'password'"
+              v-model="senhaAtual"
+              class="w-full p-2 border rounded pr-10"
+              placeholder="Digite sua senha atual"
+            />
+            <button
+              type="button"
+              @click="mostrarSenhaAtual = !mostrarSenhaAtual"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+              tabindex="-1"
+            >
+              {{ mostrarSenhaAtual ? '🔐' : '🔓' }}
+            </button>
+          </div>
 
         <label class="block mb-2 text-sm font-medium text-gray-700">Nova Senha</label>
-        <input type="password" v-model="novaSenha" class="w-full p-2 border rounded mb-4" placeholder="Digite a nova senha">
+          <div class="relative mb-4">
+            <input
+              :type="mostrarNovaSenha ? 'text' : 'password'"
+              v-model="novaSenha"
+              class="w-full p-2 border rounded pr-10"
+              placeholder="Digite a nova senha"
+            />
+            <button
+              type="button"
+              @click="mostrarNovaSenha = !mostrarNovaSenha"
+              class="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500"
+              tabindex="-1"
+            >
+              {{ mostrarNovaSenha ? '🔐' : '🔓' }}
+            </button>
+          </div>
 
         <div class="flex justify-end space-x-2">
-          <button @click="showModal = true" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
+          <button @click="showModal = false" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
           <button @click="alterarSenha" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Salvar</button>
         </div>
       </div>
