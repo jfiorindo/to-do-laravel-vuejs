@@ -46,5 +46,10 @@ class User extends Authenticatable
             'is_admin' => 'boolean', // 👈 adicionamos aqui também
         ];
     }
+    public function tasks()
+    {
+        return $this->hasMany(\App\Models\Task::class);
+    }
+
     
 }

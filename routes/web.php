@@ -42,3 +42,9 @@ Route::middleware('api')
     ->group(base_path('routes/api.php'));
     
 require __DIR__.'/auth.php';
+
+Route::middleware(['auth', 'verified'])->prefix('admin')->group(function () {
+    Route::get('/users', function () {
+        return Inertia::render('AdminUsers');
+    })->name('admin.users');
+});

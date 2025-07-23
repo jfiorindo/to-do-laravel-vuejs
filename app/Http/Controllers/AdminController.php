@@ -67,4 +67,82 @@ class AdminController extends Controller
 
         return new StreamedResponse($callback, 200, $headers);
     }
+
+    public function showUser($id)
+    {
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        $user = User::withCount([
+            'tasks as feitas' => fn($q) => $q->where('is_completed', true),
+            'tasks as pendentes' => fn($q) => $q->where('is_completed', false),
+        ])->findOrFail($id);
+
+        return response()->json([
+            'id' => $user->id,
+            'name' => $user->name,
+            'email' => $user->email,
+            'is_admin' => $user->is_admin,
+            'created_at' => $user->created_at,
+            'feitas' => $user->feitas,
+            'pendentes' => $user->pendentes,
+        ]);
+    }
+    public function storeUser(Request $request)
+    {
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        $validated = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|string|min:6',
+            'is_admin' => 'required|boolean',
+        ]);
+
+        $validated['password'] = bcrypt($validated['password']);
+
+        return User::create($validated);
+    }
+    public function updateUser(Request $request, $id)
+    {
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'name' => 'sometimes|string|max:255',
+            'email' => 'sometimes|email|unique:users,email,' . $id,
+            'password' => 'nullable|string|min:6',
+            'is_admin' => 'sometimes|boolean',
+        ]);
+
+        if (!empty($validated['password'])) {
+            $validated['password'] = bcrypt($validated['password']);
+        } else {
+            unset($validated['password']);
+        }
+
+        $user->update($validated);
+
+        return $user;
+    }
+    public function deleteUser($id)
+    {
+        if (!Auth::user()->is_admin) {
+            return response()->json(['message' => 'Acesso negado.'], 403);
+        }
+
+        return response()->json([
+            'success' => User::destroy($id) > 0
+        ]);
+    }
+
+
+
+
 }
