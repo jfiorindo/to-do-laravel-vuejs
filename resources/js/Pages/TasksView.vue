@@ -41,6 +41,15 @@ const buscarTarefas = async () => {
   }
 }
 
+const formatarDataBR = (dataStr) => {
+  const data = new Date(dataStr)
+  const dia = String(data.getDate()).padStart(2, '0')
+  const mes = String(data.getMonth() + 1).padStart(2, '0')
+  const ano = data.getFullYear()
+  return `${dia}/${mes}/${ano}`
+}
+
+
 const alternarStatus = async (tarefa) => {
   try {
     await axios.put(`/api/tasks/${tarefa.id}`, {
@@ -219,7 +228,8 @@ const alterarSenha = async () => {
                   <div>
                     <h4 class="text-lg font-semibold text-gray-800">{{ tarefa.title }}</h4>
                     <p class="text-sm text-gray-600">{{ tarefa.description }}</p>
-                    <p class="text-sm text-gray-400 mt-1">Vencimento: {{ tarefa.due_date }}</p>
+                    <p class="text-sm text-gray-400 mt-1"> Vencimento: {{ formatarDataBR(tarefa.due_date) }} </p>
+
                   </div>
                   <input type="checkbox" :checked="tarefa.is_completed" @change="() => alternarStatus(tarefa)" class="w-5 h-5">
                 </div>
@@ -235,7 +245,7 @@ const alterarSenha = async () => {
                   <div>
                     <h4 class="text-lg font-semibold text-gray-800">{{ tarefa.title }}</h4>
                     <p class="text-sm text-gray-600">{{ tarefa.description }}</p>
-                    <p class="text-sm text-gray-400 mt-1">Vencimento: {{ tarefa.due_date }}</p>
+                    <p class="text-sm text-gray-400 mt-1"> Vencimento: {{ formatarDataBR(tarefa.due_date) }} </p>
                   </div>
                   <input type="checkbox" :checked="tarefa.is_completed" @change="() => alternarStatus(tarefa)" class="w-5 h-5">
                 </div>
@@ -266,7 +276,8 @@ const alterarSenha = async () => {
               <tbody>
                 <tr v-for="tarefa in tarefasVencidas" :key="tarefa.id">
                   <td class="border px-4 py-2">{{ tarefa.title }}</td>
-                  <td class="border px-4 py-2">{{ tarefa.due_date }}</td>
+                  <td class="border px-4 py-2"> {{ formatarDataBR(tarefa.due_date) }} </td>
+
                   <td class="border px-4 py-2">
                     <span :class="tarefa.is_completed ? 'text-green-600' : 'text-red-600'">
                       {{ tarefa.is_completed ? 'Concluída' : 'Pendente' }}
